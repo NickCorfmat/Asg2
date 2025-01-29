@@ -4,10 +4,9 @@
 // Vertex shader program
 var VSHADER_SOURCE = `
     attribute vec4 a_Position;
-    uniform float u_Size;
+    uniform mat4 u_ModelMatrix;
     void main() {
-        gl_Position = a_Position;
-        gl_PointSize = u_Size;
+        gl_Position = u_ModelMatrix * a_Position;
     }`;
 
 // Fragment shader program
@@ -28,7 +27,6 @@ let canvas;
 let gl;
 let a_Position;
 let u_FragColor;
-let u_Size;
 let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectedSize = 5;
 let g_selectedSegments = 10;
@@ -68,12 +66,16 @@ function connectVariablesToGLSL() {
     return;
   }
 
-  // Get the storage location of u_Size variable
-  u_Size = gl.getUniformLocation(gl.program, "u_Size");
-  if (!u_Size) {
-    console.log("Failed to get the storage location of u_Size.");
+  // Get the storage location of u_ModelMatrix
+  u_ModelMatrix = gl.getUniformLocation(gl.program, "u_ModelMatrix");
+  if (!u_ModelMatrix) {
+    console.log("Failed to get the storage location of u_ModelMatrix");
     return;
   }
+
+  // Set an initial value for this matrix to identity
+  var identityM = new Matrix4();
+  gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
 
 // Set up actions for the HTML UI elements
@@ -201,7 +203,17 @@ function renderAllShapes() {
   // Draw a cube
   var body = new Cube();
   body.color = [1.0, 0.0, 0.0, 1.0];
+  body.matrix.translate(-0.25, -0.5, 0.0);
+  body.matrix.scale(0.5, 1, 0.5);
   body.render();
+
+  // Draw a left arm
+  var leftArm = new Cube();
+  leftArm.color = [1, 1, 0, 1];
+  leftArm.matrix.translate(0.7, 0.0, 0.0);
+  leftArm.matrix.rotate(45, 0, 0, 1);
+  leftArm.matrix.scale(0.25, 0.7, 0.5);
+  leftArm.render();
 
   // Check the time at the end of the function, and display on web page
   var duration = performance.now() - startTime;
@@ -222,105 +234,4 @@ function sendTextToHTML(text, htmlID) {
   }
 
   htmlElm.innerHTML = text;
-}
-
-// Triangle vertices list for Millennium Falcon drawing
-const triangles = [
-  {
-    vertices: [-0.3, 0.85, -0.6, 0.2, -0.15, 0.2],
-    color: [0.75, 0.75, 0.75, 1.0],
-  }, // left side
-  {
-    vertices: [-0.15, 0.85, -0.15, 0.2, -0.3, 0.85],
-    color: [0.7, 0.7, 0.7, 1.0],
-  },
-  { vertices: [-0.6, 0.2, 0, -0.2, -0.15, 0.2], color: [0.6, 0.6, 0.6, 1.0] },
-  { vertices: [-0.72, 0, 0, -0.2, -0.6, 0.2], color: [0.75, 0.75, 0.75, 1.0] },
-  { vertices: [-0.72, 0, 0, -0.2, -0.77, -0.2], color: [0.7, 0.7, 0.7, 1.0] },
-  {
-    vertices: [-0.77, -0.4, 0, -0.2, -0.72, -0.6],
-    color: [0.7, 0.7, 0.7, 1.0],
-  },
-  {
-    vertices: [-0.72, -0.6, 0, -0.2, -0.6, -0.77],
-    color: [0.6, 0.6, 0.6, 1.0],
-  },
-  {
-    vertices: [-0.6, -0.77, 0, -0.2, -0.4, -0.89],
-    color: [0.7, 0.7, 0.7, 1.0],
-  },
-  {
-    vertices: [-0.4, -0.89, 0, -0.2, -0.2, -0.95],
-    color: [0.75, 0.75, 0.75, 1.0],
-  },
-  {
-    vertices: [-0.2, -0.95, 0, -0.2, -0.06, -0.96],
-    color: [0.7, 0.7, 0.7, 1.0],
-  },
-  {
-    vertices: [-0.72, -0.2, 0, -0.2, -0.72, -0.389],
-    color: [0.6, 0.6, 0.6, 1.0],
-  },
-  { vertices: [0.3, 0.85, 0.6, 0.2, 0.15, 0.2], color: [0.7, 0.7, 0.7, 1.0] }, // right side
-  {
-    vertices: [0.15, 0.85, 0.15, 0.2, 0.3, 0.85],
-    color: [0.75, 0.75, 0.75, 1.0],
-  },
-  { vertices: [0.6, 0.2, 0, -0.2, 0.15, 0.2], color: [0.6, 0.6, 0.6, 1.0] },
-  { vertices: [0.72, 0, 0, -0.2, 0.6, 0.2], color: [0.7, 0.7, 0.7, 1.0] },
-  { vertices: [0.72, 0, 0, -0.2, 0.77, -0.2], color: [0.75, 0.75, 0.75, 1.0] },
-  { vertices: [0.77, -0.4, 0, -0.2, 0.72, -0.6], color: [0.7, 0.7, 0.7, 1.0] },
-  { vertices: [0.72, -0.6, 0, -0.2, 0.6, -0.77], color: [0.6, 0.6, 0.6, 1.0] },
-  { vertices: [0.6, -0.77, 0, -0.2, 0.4, -0.89], color: [0.7, 0.7, 0.7, 1.0] },
-  {
-    vertices: [0.4, -0.89, 0, -0.2, 0.2, -0.95],
-    color: [0.75, 0.75, 0.75, 1.0],
-  },
-  { vertices: [0.2, -0.95, 0, -0.2, 0.06, -0.96], color: [0.7, 0.7, 0.7, 1.0] },
-  {
-    vertices: [0.72, -0.2, 0, -0.2, 0.72, -0.389],
-    color: [0.6, 0.6, 0.6, 1.0],
-  },
-  { vertices: [-0.15, 0.2, 0, -0.2, 0.15, 0.2], color: [0.7, 0.7, 0.7, 1.0] }, // middle
-  {
-    vertices: [-0.06, -0.96, 0, -0.2, 0.06, -0.96],
-    color: [0.75, 0.75, 0.75, 1.0],
-  },
-  { vertices: [0.6, 0.2, 0.72, 0, 0.85, 0.05], color: [0.6, 0.6, 0.6, 1.0] }, // cockpit
-  { vertices: [0.6, 0.2, 0.85, 0.05, 0.87, 0.2], color: [0.7, 0.7, 0.7, 1.0] },
-  { vertices: [0.6, 0.2, 0.6, 0.3, 0.87, 0.2], color: [0.6, 0.6, 0.6, 1.0] },
-  { vertices: [0.87, 0.3, 0.6, 0.3, 0.87, 0.2], color: [0.7, 0.7, 0.7, 1.0] },
-  {
-    vertices: [0.6, 0.3, 0.6675, 0.45, 0.735, 0.3],
-    color: [0.25, 0.25, 0.25, 1.0],
-  },
-  {
-    vertices: [0.87, 0.3, 0.8025, 0.45, 0.735, 0.3],
-    color: [0.25, 0.25, 0.25, 1.0],
-  },
-  {
-    vertices: [0.6675, 0.45, 0.8025, 0.45, 0.735, 0.3],
-    color: [0.3, 0.3, 0.3, 1.0],
-  },
-];
-
-function generateExample() {
-  g_shapesList = [];
-  gl.clear(gl.COLOR_BUFFER_BIT);
-
-  for (var i = 0; i < triangles.length; i++) {
-    // Set triangle color
-    var rgba = triangles[i].color;
-
-    gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
-
-    drawTriangle(triangles[i].vertices);
-  }
-}
-
-function undoStroke() {
-  if (g_shapesList.length > 0) {
-    g_shapesList.pop();
-    renderAllShapes();
-  }
 }
