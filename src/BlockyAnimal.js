@@ -130,8 +130,12 @@ function addActionsForHtmlUI() {
 }
 
 function main() {
+  // Set up canvas and gl variables
   setupWebGL();
+  // Set up GLSL shader programs and connect GLSL variables
   connectVariablesToGLSL();
+
+  // Set up action for the HTML UI elements
   addActionsForHtmlUI();
 
   // Register function (event handler) to be called on a mouse press
@@ -145,8 +149,8 @@ function main() {
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-  // Clear <canvas>
-  gl.clear(gl.COLOR_BUFFER_BIT);
+  // Render
+  renderAllShapes();
 }
 
 function handleClicks(ev) {
@@ -186,28 +190,28 @@ function convertCoordinatesEventToGL(ev) {
 
 function renderAllShapes() {
   // Check the time at the start of this function
-  //var startTime = performance.now();
+  var startTime = performance.now();
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  var len = g_shapesList.length;
+  // Draw a test triangle
+  drawTriangle3D([-1.0, 0.0, 0.0, -0.5, -1.0, 0.0, 0.0, 0.0, 0.0]);
 
-  for (var i = 0; i < len; i++) {
-    g_shapesList[i].render();
-  }
+  // Draw a cube
+  var body = new Cube();
+  body.color = [1.0, 0.0, 0.0, 1.0];
+  body.render();
 
   // Check the time at the end of the function, and display on web page
-  // var duration = performance.now() - startTime;
-  // sendTextToHTML(
-  //   "numdot: " +
-  //     len +
-  //     " ms: " +
-  //     Math.floor(duration) +
-  //     " fps: " +
-  //     Math.floor(10000 / duration) / 10,
-  //   "numdot"
-  // );
+  var duration = performance.now() - startTime;
+  sendTextToHTML(
+    " ms: " +
+      Math.floor(duration) +
+      " fps: " +
+      Math.floor(10000 / duration) / 10,
+    "numdot"
+  );
 }
 
 function sendTextToHTML(text, htmlID) {
