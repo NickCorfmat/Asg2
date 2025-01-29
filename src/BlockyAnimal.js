@@ -89,9 +89,6 @@ function addActionsForHtmlUI() {
     g_shapesList = [];
     renderAllShapes();
   };
-  document.getElementById("undoButton").onclick = function () {
-    undoStroke();
-  };
 
   // Shape Buttons
   document
@@ -107,13 +104,6 @@ function addActionsForHtmlUI() {
     .getElementById("circleButton")
     .addEventListener("mouseup", function () {
       g_selectedType = CIRCLE;
-    });
-
-  // Example Drawing
-  document
-    .getElementById("example-drawing")
-    .addEventListener("mouseup", function () {
-      generateExample();
     });
 
   // Slider Events
@@ -136,13 +126,6 @@ function addActionsForHtmlUI() {
     .getElementById("sizeSlider")
     .addEventListener("mouseup", function () {
       g_selectedSize = this.value;
-    });
-
-  // Circle segment sliders
-  document
-    .getElementById("segmentSlider")
-    .addEventListener("mouseup", function () {
-      g_selectedSegments = this.value;
     });
 }
 

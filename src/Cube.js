@@ -1,4 +1,4 @@
-class Circle {
+class Cube {
   constructor() {
     this.type = "circle";
     this.position = [0.0, 0.0, 0.0];
