@@ -31,7 +31,6 @@ let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectedSize = 5;
 let g_selectedSegments = 10;
 let g_selectedType = POINT;
-var g_shapesList = [];
 
 function setupWebGL() {
   // Retrieve <canvas> element
@@ -88,7 +87,6 @@ function addActionsForHtmlUI() {
     g_selectedColor = [1.0, 0.0, 0.0, 1.0];
   };
   document.getElementById("clearButton").onclick = function () {
-    g_shapesList = [];
     renderAllShapes();
   };
 
@@ -173,7 +171,6 @@ function handleClicks(ev) {
   point.position = [x, y];
   point.color = g_selectedColor.slice();
   point.size = g_selectedSize;
-  g_shapesList.push(point);
 
   // Draw every shape that is supposed to be in the canvas
   renderAllShapes();
