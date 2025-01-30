@@ -33,6 +33,7 @@ let g_selectedSize = 5;
 let g_selectedSegments = 10;
 let g_selectedType = POINT;
 let g_globalAngle = 0;
+let g_yellowAngle = 0;
 
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -133,9 +134,10 @@ function addActionsForHtmlUI() {
       g_selectedColor[1] = this.value / 100;
     });
   document
-    .getElementById("blueSlider")
-    .addEventListener("mouseup", function () {
-      g_selectedColor[2] = this.value / 100;
+    .getElementById("yellowSlider")
+    .addEventListener("mousemove", function () {
+      g_yellowAngle = this.value;
+      renderAllShapes();
     });
 
   // Angle slider
@@ -230,7 +232,7 @@ function renderAllShapes() {
   leftArm.color = [1, 1, 0, 1];
   leftArm.matrix.setTranslate(0, -0.5, 0.0);
   leftArm.matrix.rotate(-5, 1, 0, 0);
-  leftArm.matrix.rotate(0, 0, 0, 1);
+  leftArm.matrix.rotate(-g_yellowAngle, 0, 0, 1);
   leftArm.matrix.scale(0.25, 0.7, 0.5);
   leftArm.matrix.translate(-0.5, 0, 0);
   leftArm.render();
