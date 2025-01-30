@@ -39,6 +39,9 @@ let g_magentaAngle = 0;
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
 
+var g_startTime = performance.now() / 1000.0;
+var g_seconds = performance.now() / 1000.0 - g_startTime;
+
 function setupWebGL() {
   // Retrieve <canvas> element
   canvas = document.getElementById("webgl");
@@ -172,7 +175,13 @@ function main() {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
   // Render
+  requestAnimationFrame(tick);
+}
+
+function tick() {
+  g_seconds = performance.now() / 1000.0 - g_startTime;
   renderAllShapes();
+  requestAnimationFrame(tick);
 }
 
 function handleClicks(ev) {
@@ -234,7 +243,7 @@ function renderAllShapes() {
   leftArm.color = [1, 1, 0, 1];
   leftArm.matrix.setTranslate(0, -0.5, 0.0);
   leftArm.matrix.rotate(-5, 1, 0, 0);
-  leftArm.matrix.rotate(-g_yellowAngle, 0, 0, 1);
+  leftArm.matrix.rotate(45*Math.sin(g_seconds), 0, 0, 1);
   var yellowCoordinatesMat = new Matrix4(leftArm.matrix);
   leftArm.matrix.scale(0.25, 0.7, 0.5);
   leftArm.matrix.translate(-0.5, 0, -0.001);
