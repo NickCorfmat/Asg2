@@ -35,6 +35,8 @@ let g_selectedType = POINT;
 let g_globalAngle = 0;
 let g_yellowAngle = 0;
 let g_magentaAngle = 0;
+let g_yellowAnimation = false;
+let g_magentaAnimation = false;
 
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -101,37 +103,19 @@ function connectVariablesToGLSL() {
 
 // Set up actions for the HTML UI elements
 function addActionsForHtmlUI() {
-  // Button Events (Shape Type)
-  document.getElementById("green").onclick = function () {
-    g_selectedColor = [0.0, 1.0, 0.0, 1.0];
+  document.getElementById("animationYellowOnButton").onclick = function () {
+    g_yellowAnimation = true;
   };
-  document.getElementById("red").onclick = function () {
-    g_selectedColor = [1.0, 0.0, 0.0, 1.0];
+  document.getElementById("animationYellowOffButton").onclick = function () {
+    g_yellowAnimation = false;
   };
-  document.getElementById("clearButton").onclick = function () {
-    renderAllShapes();
+  document.getElementById("animationMagentaOnButton").onclick = function () {
+    g_magentaAnimation = true;
+  };
+  document.getElementById("animationMagentaOffButton").onclick = function () {
+    g_magentaAnimation = false;
   };
 
-  // Shape Buttons
-  document
-    .getElementById("pointButton")
-    .addEventListener("mouseup", function () {
-      g_selectedType = POINT;
-    });
-
-  document.getElementById("triButton").addEventListener("mouseup", function () {
-    g_selectedType = TRIANGLE;
-  });
-  document
-    .getElementById("circleButton")
-    .addEventListener("mouseup", function () {
-      g_selectedType = CIRCLE;
-    });
-
-  // Slider Events
-  document.getElementById("redSlider").addEventListener("mouseup", function () {
-    g_selectedColor[0] = this.value / 100;
-  });
   document
     .getElementById("magentaSlider")
     .addEventListener("mousemove", function () {
@@ -180,8 +164,20 @@ function main() {
 
 function tick() {
   g_seconds = performance.now() / 1000.0 - g_startTime;
+  updateAnimationAngles();
   renderAllShapes();
   requestAnimationFrame(tick);
+}
+
+// Update the angles of everything if currently animated
+function updateAnimationAngles() {
+  if (g_yellowAnimation) {
+    g_yellowAngle = 45 * Math.sin(g_seconds);
+  }
+  if (g_magentaAnimation) {
+    g_magentaAngle = 45 * Math.sin(3 * g_seconds);
+  }
+  console.log(g_yellowAngle)
 }
 
 function handleClicks(ev) {
@@ -239,25 +235,25 @@ function renderAllShapes() {
   body.render();
 
   // Draw a left arm
-  var leftArm = new Cube();
-  leftArm.color = [1, 1, 0, 1];
-  leftArm.matrix.setTranslate(0, -0.5, 0.0);
-  leftArm.matrix.rotate(-5, 1, 0, 0);
-  leftArm.matrix.rotate(45*Math.sin(g_seconds), 0, 0, 1);
-  var yellowCoordinatesMat = new Matrix4(leftArm.matrix);
-  leftArm.matrix.scale(0.25, 0.7, 0.5);
-  leftArm.matrix.translate(-0.5, 0, -0.001);
-  leftArm.render();
+  var yellow = new Cube();
+  yellow.color = [1, 1, 0, 1];
+  yellow.matrix.setTranslate(0, -0.5, 0.0);
+  yellow.matrix.rotate(-5, 1, 0, 0);
+  yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
+  var yellowCoordinatesMat = new Matrix4(yellow.matrix);
+  yellow.matrix.scale(0.25, 0.7, 0.5);
+  yellow.matrix.translate(-0.5, 0, -0.001);
+  yellow.render();
 
   // Test box
-  var box = new Cube();
-  box.color = [1, 0, 1, 1];
-  box.matrix = yellowCoordinatesMat;
-  box.matrix.translate(0, 0.65, 0);
-  box.matrix.rotate(g_magentaAngle, 1, 0, 0);
-  box.matrix.scale(0.3, 0.3, 0.3);
-  box.matrix.translate(-0.5, 0, 0, 0);
-  box.render();
+  var magenta = new Cube();
+  magenta.color = [1, 0, 1, 1];
+  magenta.matrix = yellowCoordinatesMat;
+  magenta.matrix.translate(0, 0.65, 0);
+  magenta.matrix.rotate(g_magentaAngle, 1, 0, 0);
+  magenta.matrix.scale(0.3, 0.3, 0.3);
+  magenta.matrix.translate(-0.5, 0, 0, 0);
+  magenta.render();
 
   // Check the time at the end of the function, and display on web page
   var duration = performance.now() - startTime;
