@@ -36,7 +36,7 @@ let g_globalAngle = 0;
 let animation = false;
 
 let g_torsoAngle = 0;
-let g_headAngle = 0;
+let g_headAngle = -5;
 let g_rightLegAngle = 0;
 let g_leftLegAngle = 0;
 
@@ -200,6 +200,8 @@ function updateAnimationAngles() {
   if (animation) {
     g_torsoAngle = 9 * Math.sin(g_seconds * 2) + 4;
     g_headAngle = 10 * Math.sin(g_seconds * 2);
+    g_rightLegAngle = 10 * Math.sin(g_seconds * 2);
+    g_leftLegAngle = -15 * Math.sin(g_seconds * 2);
   }
 }
 
@@ -252,11 +254,7 @@ function renderScene() {
 
   let M = new Matrix4();
   let color = [1.0, 1.0, 1.0, 1.0];
-  let animalSkinColor = [0.427, 0.765, 0.91, 1];
-
-  // let c = new Cube();
-  // c.matrix.setTranslate(-0.5, 0, 0.5)
-  // c.render();
+  let animalSkinColor = [0.427, 0.61, 0.91, 1];
 
   // hips
   M.setTranslate(-0.15, -0.27, 0.15);
@@ -289,7 +287,10 @@ function renderScene() {
   let headCoords = M;
   drawCube(M, color);
 
+  // left ear
+
   // nose
+  color = [0.427, 0.6, 0.91, 1];
   M = neckCoords;
   M.translate(0.275, 0.1, -1);
   M.scale(0.45, 0.4, 0.15);
@@ -353,6 +354,14 @@ function renderScene() {
   // left foot
   M.scale(1, 0.25, 0.9);
   M.translate(0, 0, -1);
+  drawCube(M, color);
+
+  // tree log
+  color = [0.58, 0.345, 0.188, 1];
+  M.setIdentity();
+  M.rotate(-5, 1, 0, 0);
+  M.translate(-0.28, -0.76, 1);
+  M.scale(0.5, 0.3, 2);
   drawCube(M, color);
 
   // Check the time at the end of the function, and display on web page
