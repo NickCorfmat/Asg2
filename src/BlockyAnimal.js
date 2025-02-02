@@ -223,13 +223,15 @@ function renderScene() {
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  gl.clear(gl.COLOR_BUFFER_BIT);
 
   // Draw a cube
+  let color = [1.0, 0.0, 1.0, 1.0];
+
   const M = new Matrix4();
   M.translate(-0.5, -0.5, 0);
+  M.rotate(0, 0, 0, 1);
 
-  drawCube(M);
+  drawCube(M, color);
 
   // var body = new Cube();
   // body.color = [1.0, 0.0, 0.0, 1.0];

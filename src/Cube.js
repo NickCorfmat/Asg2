@@ -14,6 +14,10 @@ class Cube {
     // pass the matrix to u_ModelMatrix attribute
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
+    // Top face
+    drawTriangle3D([0, 0, 0, 1, 1, 0, 1, 0, 0]);
+    drawTriangle3D([0, 0, 0, 0, 1, 0, 1, 1, 0]);
+
     gl.uniform4f(
       u_FragColor,
       rgba[0] * 0.9,
@@ -21,10 +25,6 @@ class Cube {
       rgba[2] * 0.9,
       rgba[3]
     );
-
-    // Top face
-    drawTriangle3D([0, 0, 0, 1, 1, 0, 1, 0, 0]);
-    drawTriangle3D([0, 0, 0, 0, 1, 0, 1, 1, 0]);
 
     // Front face
     drawTriangle3D([0, 0, 0, 1, 0, 0, 1, 0, -1]);
@@ -48,7 +48,7 @@ class Cube {
   }
 }
 
-function drawCube(matrix) {
+function drawCube(matrix, color) {
   gl.enable(gl.DEPTH_TEST);
 
   var n = 36; // number of vertices
@@ -93,7 +93,7 @@ function drawCube(matrix) {
 
   gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
 
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.uniform4f(u_FragColor, color[0], color[1], color[2], color[3])
 
   gl.drawArrays(gl.TRIANGLES, 0, n);
 }
