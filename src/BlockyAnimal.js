@@ -38,6 +38,7 @@ let animation = false;
 let g_torsoAngle = 0;
 let g_headAngle = 0;
 let g_rightLegAngle = 0;
+let g_leftLegAngle = 0;
 
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -341,21 +342,18 @@ function renderScene() {
   M.translate(0, 0, -1);
   drawCube(M, color);
 
-  // // left leg
-  // M.setIdentity();
-  // M.translate(0.24, -0.35, -0.06);
-  // M.rotate(15, 0, 1, 0);
-  // M.rotate(-45, 1, 0, 0);
-  // M.scale(0.1, 0.2, 0.1);
-  // drawCube(M, color);
+  // left leg
+  color = [1, 1, 1, 1];
+  M.setIdentity();
+  M.rotate(g_leftLegAngle, 1, 0, 0);
+  M.scale(0.1, 0.21, 0.1);
+  M.translate(0.25, -2.2, 0.3);
+  drawCube(M, color);
 
-  // // left foot
-  // M.setIdentity();
-  // M.translate(0.24, -0.35, -0.06);
-  // M.rotate(15, 0, 1, 0);
-  // M.rotate(-45, 1, 0, 0);
-  // M.scale(0.1, 0.08, 0.2);
-  // drawCube(M, color);
+  // left foot
+  M.scale(1, 0.25, 0.9);
+  M.translate(0, 0, -1);
+  drawCube(M, color);
 
   // Check the time at the end of the function, and display on web page
   var duration = performance.now() - startTime;
