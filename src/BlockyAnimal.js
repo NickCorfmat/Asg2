@@ -35,6 +35,7 @@ let g_selectedType = POINT;
 let g_globalAngle = 0;
 
 let g_torsoAngle = 0;
+let g_headAngle = 0;
 
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -108,6 +109,13 @@ function addActionsForHtmlUI() {
       renderScene();
     });
 
+  document
+    .getElementById("headSlider")
+    .addEventListener("mousemove", function () {
+      g_headAngle = this.value;
+      renderScene();
+    });
+
   // Angle slider
   document
     .getElementById("angleSlider")
@@ -173,9 +181,7 @@ function tick() {
 }
 
 // Update the angles of everything if currently animated
-function updateAnimationAngles() {
-  
-}
+function updateAnimationAngles() {}
 
 function handleClicks(ev) {
   // Extract the event click and return it in WebGL coordinates
@@ -231,7 +237,7 @@ function renderScene() {
   // c.render();
 
   // hips
-  M.setTranslate(-0.15, -0.2, 0.15);
+  M.setTranslate(-0.15, -0.27, 0.15);
   M.rotate(20, -1, 1, 0);
   M.scale(0.35, 0.15, 0.35);
   let hipCoords = new Matrix4(M);
@@ -241,7 +247,7 @@ function renderScene() {
   color = animalSkinColor;
   M = hipCoords;
   M.scale(0.9, 2, 0.9);
-  M.rotate(g_torsoAngle, -1, 0, 0)
+  M.rotate(-g_torsoAngle, -1, 0, 0);
   M.translate(0.05, 0.3, -0.05);
   let torsoCoords = new Matrix4(M);
   drawCube(M, color);
@@ -249,8 +255,42 @@ function renderScene() {
   // neck
   M = torsoCoords;
   M.translate(0.25, 0.4, -0.25);
+  M.rotate(-g_headAngle, 1, 0, 0);
   M.scale(0.5, 1, 0.5);
+  let neckCoords = new Matrix4(M);
   drawCube(M, color);
+
+  // head
+  M = neckCoords;
+  M.scale(2.4, 0.85, 2.4);
+  M.translate(-0.3, 0.8, 0.3);
+  drawCube(M, color);
+
+  // nose
+  M = neckCoords;
+  M.translate(0.275, 0.1, -1);
+  M.scale(0.45, 0.4, 0.15);
+  drawCube(M, color);
+
+  // left eye
+  color = [0.1, 0.1, 0.1, 1];
+  M = neckCoords;
+  M.translate(-0.35, 0.9, 0.1);
+  M.scale(0.35, 0.5, 0.5);
+  drawCube(M, color);
+
+  // left eye
+  color = [0.1, 0.1, 0.1, 1];
+  M.translate(3.8, 0, 0);
+  drawCube(M, color);
+
+  // hat
+  let cone = new Cone();
+  cone.color = [0.95, 0.95, 0.95, 1.0];
+  cone.matrix = M;
+  cone.height = 6;
+  cone.radius = 6;
+  cone.render();
 
   // // left arm
   // M.setIdentity();
@@ -266,39 +306,6 @@ function renderScene() {
   // M.rotate(40, -1, 1, 0);
   // M.rotate(-5, 0, -1, 1);
   // M.scale(0.08, 0.31, 0.08);
-  // drawCube(M, color);
-
-  // // head
-  // M.setIdentity();
-  // M.translate(-0.03, 0.18, -0.1);
-  // M.rotate(15, 0, 1, 0);
-  // M.rotate(-5, 1, 0, 0);
-  // M.scale(0.4, 0.24, 0.4);
-  // drawCube(M, color);
-
-  // // nose
-  // M.setIdentity();
-  // M.translate(-0.015, 0.18, -0.43);
-  // M.rotate(15, 0, 1, 0);
-  // M.rotate(-5, 1, 0, 0);
-  // M.scale(0.18, 0.075, 0.15);
-  // drawCube(M, color);
-
-  // // left eye
-  // color = [0.1, 0.1, 0.1, 1];
-  // M.setIdentity();
-  // M.translate(0.14, 0.23, -0.54);
-  // M.rotate(15, 0, 1, 0);
-  // M.rotate(-5, 1, 0, 0);
-  // M.scale(0.07, 0.07, 0.05);
-  // drawCube(M, color);
-
-  // // right eye
-  // M.setIdentity();
-  // M.translate(-0.09, 0.23, -0.49);
-  // M.rotate(15, 0, 1, 0);
-  // M.rotate(-5, 1, 0, 0);
-  // M.scale(0.07, 0.07, 0.05);
   // drawCube(M, color);
 
   // // right leg
@@ -333,15 +340,6 @@ function renderScene() {
   // M.rotate(-45, 1, 0, 0);
   // M.scale(0.1, 0.08, 0.2);
   // drawCube(M, color);
-
-  // // hat
-  // let cone = new Cone();
-  // cone.color = [0.95, 0.95, 0.95, 1.0];
-  // cone.height = 0.42;
-  // cone.radius = 0.41;
-  // cone.matrix.translate(0.1, 0.36, -0.35);
-  // cone.matrix.rotate(8, 1, 0, 0);
-  // cone.render();
 
   // Check the time at the end of the function, and display on web page
   var duration = performance.now() - startTime;
