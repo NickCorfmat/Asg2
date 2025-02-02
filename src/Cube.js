@@ -93,7 +93,18 @@ function drawCube(matrix, color) {
 
   gl.uniformMatrix4fv(u_ModelMatrix, false, matrix.elements);
 
-  gl.uniform4f(u_FragColor, color[0], color[1], color[2], color[3])
+  gl.uniform4f(u_FragColor, color[0], color[1], color[2], color[3]);
 
-  gl.drawArrays(gl.TRIANGLES, 0, n);
+  gl.drawArrays(gl.TRIANGLES, 0, 30);
+
+  gl.uniform4f(
+    u_FragColor,
+    color[0] * 0.9,
+    color[1] * 0.9,
+    color[2] * 0.9,
+    color[3]
+  );
+
+  // Draw the top face
+  gl.drawArrays(gl.TRIANGLES, 30, 6);
 }

@@ -225,13 +225,35 @@ function renderScene() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // Draw a cube
-  let color = [1.0, 0.0, 1.0, 1.0];
+  let color = [0.9, 0.9, 0.9, 1.0];
+  let animalSkinColor = [0.427, 0.765, 0.91, 1];
 
   const M = new Matrix4();
-  M.translate(-0.5, -0.5, 0);
-  M.rotate(0, 0, 0, 1);
-
+  M.setTranslate(0, -0.3, 0);
+  M.rotate(20, -1, 1, 0);
+  M.scale(0.35, 0.15, 0.35)
   drawCube(M, color);
+
+  color = animalSkinColor;
+  M.setIdentity();
+  M.translate(0.02, -0.2, -0.055)
+  M.rotate(20, -1, 1, 0);
+  M.scale(0.3, 0.35, 0.3)
+  drawCube(M, color);
+
+  color = animalSkinColor;
+  M.setIdentity();
+  M.translate(0.045, 0.1, -0.185)
+  M.rotate(20, -1, 1, 0);
+  M.scale(0.2, 0.1, 0.2)
+  drawCube(M, color);
+
+
+  // color = 
+  // M.setIdentity();
+  // M.translate(-0.5, -0.5, 0)
+  // M.scale(0.5, 0.5, 0.5)
+  // drawCube(M, color)
 
   // var body = new Cube();
   // body.color = [1.0, 0.0, 0.0, 1.0];
