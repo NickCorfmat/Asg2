@@ -39,6 +39,7 @@ let g_torsoAngle = 0;
 let g_headAngle = -5;
 let g_rightLegAngle = 0;
 let g_leftLegAngle = 0;
+let g_leftArmAngle = 0;
 
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -201,7 +202,8 @@ function updateAnimationAngles() {
     g_torsoAngle = 9 * Math.sin(g_seconds * 2) + 4;
     g_headAngle = 10 * Math.sin(g_seconds * 2);
     g_rightLegAngle = 10 * Math.sin(g_seconds * 2);
-    g_leftLegAngle = -15 * Math.sin(g_seconds * 2);
+    g_leftLegAngle = -15 * Math.sin(g_seconds * 2) - 5;
+    g_leftArmAngle = 20 * Math.sin(g_seconds * 2) + 10;
   }
 }
 
@@ -319,15 +321,22 @@ function renderScene() {
   cone.radius = 6.5;
   cone.render();
 
-  // left arm
-  color = animalSkinColor;
-  M = torsoCoords;
-  M.translate(1.5, -0.5, 0);
-  M.scale(0.5, 1, 0.5);
-  drawCube(M, color);
+  let leftArmCoords = new Matrix4(torsoCoords);
 
   // left arm
-  M.translate(-5, 0, 0);
+  color = animalSkinColor;
+  M.matrix = leftArmCoords;
+  M.translate(2.1, -5, 1);
+  M.rotate(g_leftArmAngle, 1, 0, 0);
+  M.scale(1.3, -5.5, 1.3);
+  drawCube(M, color);
+
+  // right arm
+  M = torsoCoords;
+  M.translate(-1.05, 0.5, -0.2);
+  M.rotate(-g_leftArmAngle, 1, 0, 0);
+  M.scale(0.5, -1, 0.5);
+  let rightArmCoords = new Matrix4(M);
   drawCube(M, color);
 
   // right leg
