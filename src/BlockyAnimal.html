@@ -10,30 +10,32 @@ None
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
     <title>Blocky Animal</title>
   </head>
 
   <body onload="main()">
+    <h1>Super Epic Smurf Cat</h1>
+
     <canvas id="webgl" width="400" height="400">
       Please use a browser that supports "canvas"
     </canvas>
+    
     <p id="numdot"> XXX </p>
 
-    X <input type="range" min="0" max="100" value="100" class="slider" id="redSlider"><br>
-    Magenta <input type="range" min="0" max="100" value="0" class="slider" id="magentaSlider">
-    Animation:
-    <button type="button" id="animationMagentaOnButton">ON</button>
-    <button type="button" id="animationMagentaOffButton">OFF</button>
+    <h2>Animation:</h2>
+    <div id="animationButtons">
+      <button type="button" id="animationOnButton">ON</button>
+      <button type="button" id="animationOffButton">OFF</button>
+    </div>
     
     <br>
 
-    Yellow <input type="range" min="-45" max="45" value="0" class="slider" id="yellowSlider">
-    Animation:
-    <button type="button" id="animationYellowOnButton">ON</button>
-    <button type="button" id="animationYellowOffButton">OFF</button>
-    <br>
+    Camera Angle <input type="range" min="0" max="360" value="0" class="slider" id="angleSlider"><br>
     
-    Camera Angle <input type="range" min="0" max="360" value="5" class="slider" id="angleSlider"><br>
+    <br><br>
+
+    Torso <input type="range" min="-45" max="45" value="0" class="slider" id="torsoSlider">
 
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>

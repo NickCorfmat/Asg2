@@ -33,10 +33,8 @@ let g_selectedSize = 5;
 let g_selectedSegments = 10;
 let g_selectedType = POINT;
 let g_globalAngle = 0;
-let g_yellowAngle = 0;
-let g_magentaAngle = 0;
-let g_yellowAnimation = false;
-let g_magentaAnimation = false;
+
+let g_torsoAngle = 0;
 
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -103,29 +101,10 @@ function connectVariablesToGLSL() {
 
 // Set up actions for the HTML UI elements
 function addActionsForHtmlUI() {
-  document.getElementById("animationYellowOnButton").onclick = function () {
-    g_yellowAnimation = true;
-  };
-  document.getElementById("animationYellowOffButton").onclick = function () {
-    g_yellowAnimation = false;
-  };
-  document.getElementById("animationMagentaOnButton").onclick = function () {
-    g_magentaAnimation = true;
-  };
-  document.getElementById("animationMagentaOffButton").onclick = function () {
-    g_magentaAnimation = false;
-  };
-
   document
-    .getElementById("magentaSlider")
+    .getElementById("torsoSlider")
     .addEventListener("mousemove", function () {
-      g_magentaAngle = this.value;
-      renderScene();
-    });
-  document
-    .getElementById("yellowSlider")
-    .addEventListener("mousemove", function () {
-      g_yellowAngle = this.value;
+      g_torsoAngle = this.value;
       renderScene();
     });
 
@@ -136,6 +115,30 @@ function addActionsForHtmlUI() {
       g_globalAngle = this.value;
       renderScene();
     });
+
+  // Click and drag to rotate
+  let isDragging = false;
+  let lastX = 0;
+
+  canvas.addEventListener("mousedown", (ev) => {
+    if (ev.button === 0) {
+      isDragging = true;
+      lastX = ev.clientX;
+    }
+  });
+
+  document.addEventListener("mousemove", (ev) => {
+    if (isDragging) {
+      let deltaX = ev.clientX - lastX;
+      g_globalAngle -= deltaX * 0.5;
+      lastX = ev.clientX;
+      renderScene();
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    isDragging = false;
+  });
 }
 
 function main() {
@@ -171,12 +174,7 @@ function tick() {
 
 // Update the angles of everything if currently animated
 function updateAnimationAngles() {
-  if (g_yellowAnimation) {
-    g_yellowAngle = 45 * Math.sin(g_seconds);
-  }
-  if (g_magentaAnimation) {
-    g_magentaAngle = 45 * Math.sin(3 * g_seconds);
-  }
+  
 }
 
 function handleClicks(ev) {
@@ -224,165 +222,126 @@ function renderScene() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  // Draw a cube
+  let M = new Matrix4();
   let color = [0.9, 0.9, 0.9, 1.0];
   let animalSkinColor = [0.427, 0.765, 0.91, 1];
 
+  // let c = new Cube();
+  // c.matrix.setTranslate(-0.5, 0, 0.5)
+  // c.render();
+
   // hips
-  const M = new Matrix4();
-  M.setTranslate(0, -0.22, 0);
+  M.setTranslate(-0.15, -0.2, 0.15);
   M.rotate(20, -1, 1, 0);
   M.scale(0.35, 0.15, 0.35);
+  let hipCoords = new Matrix4(M);
   drawCube(M, color);
 
   // torso
   color = animalSkinColor;
-  M.setIdentity();
-  M.translate(0.02, -0.2, -0.045);
-  M.rotate(20, -1, 1, 0);
-  M.scale(0.3, 0.35, 0.3);
+  M = hipCoords;
+  M.scale(0.9, 2, 0.9);
+  M.rotate(g_torsoAngle, -1, 0, 0)
+  M.translate(0.05, 0.3, -0.05);
   drawCube(M, color);
 
-  // left arm
-  M.setIdentity();
-  M.translate(0.31, -0.19, -0.19);
-  M.rotate(40, -1, 1, 0);
-  M.rotate(5, 0, -1, 1);
-  M.scale(0.08, 0.31, 0.08);
-  drawCube(M, color);
-
-  // right arm
-  M.setIdentity();
-  M.translate(-0.06, -0.19, -0.1);
-  M.rotate(40, -1, 1, 0);
-  M.rotate(-5, 0, -1, 1);
-  M.scale(0.08, 0.31, 0.08);
-  drawCube(M, color);
-
-  // neck
-  M.setIdentity();
-  M.translate(0.045, 0.1, -0.185);
-  M.rotate(20, -1, 1, 0);
-  M.scale(0.2, 0.2, 0.2);
-  drawCube(M, color);
-
-  // head
-  M.setIdentity();
-  M.translate(-0.03, 0.18, -0.1);
-  M.rotate(15, 0, 1, 0);
-  M.rotate(-5, 1, 0, 0);
-  M.scale(0.4, 0.24, 0.4);
-  drawCube(M, color);
-
-  // nose
-  M.setIdentity();
-  M.translate(-0.015, 0.18, -0.43);
-  M.rotate(15, 0, 1, 0);
-  M.rotate(-5, 1, 0, 0);
-  M.scale(0.18, 0.075, 0.15);
-  drawCube(M, color);
-
-  // left eye
-  color = [0.1, 0.1, 0.1, 1];
-  M.setIdentity();
-  M.translate(0.14, 0.23, -0.54);
-  M.rotate(15, 0, 1, 0);
-  M.rotate(-5, 1, 0, 0);
-  M.scale(0.07, 0.07, 0.05);
-  drawCube(M, color);
-
-  // right eye
-  M.setIdentity();
-  M.translate(-0.09, 0.23, -0.49);
-  M.rotate(15, 0, 1, 0);
-  M.rotate(-5, 1, 0, 0);
-  M.scale(0.07, 0.07, 0.05);
-  drawCube(M, color);
-
-  // right leg
-  color = [1, 1, 1, 1];
-  M.setIdentity();
-  M.translate(0.01, -0.35, 0.02);
-  M.rotate(15, 0, 1, 0);
-  M.rotate(-45, 1, 0, 0);
-  M.scale(0.1, 0.2, 0.1);
-  drawCube(M, color);
-
-  // right foot
-  M.setIdentity();
-  M.translate(0.01, -0.35, 0.02);
-  M.rotate(15, 0, 1, 0);
-  M.rotate(-45, 1, 0, 0);
-  M.scale(0.1, 0.08, 0.2);
-  drawCube(M, color);
-
-  // left leg
-  M.setIdentity();
-  M.translate(0.24, -0.35, -0.06);
-  M.rotate(15, 0, 1, 0);
-  M.rotate(-45, 1, 0, 0);
-  M.scale(0.1, 0.2, 0.1);
-  drawCube(M, color);
-
-  // left foot
-  M.setIdentity();
-  M.translate(0.24, -0.35, -0.06);
-  M.rotate(15, 0, 1, 0);
-  M.rotate(-45, 1, 0, 0);
-  M.scale(0.1, 0.08, 0.2);
-  drawCube(M, color);
-
-  // hat
-  let cone = new Cone();
-  cone.color = [0.95, 0.95, 0.95, 1.0]
-  cone.height = 0.42;
-  cone.radius = 0.41;
-  cone.matrix.translate(0.1, 0.36, -0.35)
-  cone.matrix.rotate(8, 1, 0, 0)
-  cone.render();
-
-  // tree log
-  // color = [0.561, 0.392, 0.353, 1];
+  // // left arm
   // M.setIdentity();
-  // M.translate(-0.5, -0.7, -0.5);
-  // M.rotate(-10, 1, 0, 0);
-  // M.rotate(30, 0, 1, 0);
-  // M.scale(1, 0.3, 2);
+  // M.translate(0.31, -0.19, -0.19);
+  // M.rotate(40, -1, 1, 0);
+  // M.rotate(5, 0, -1, 1);
+  // M.scale(0.08, 0.31, 0.08);
   // drawCube(M, color);
 
-  // color =
+  // // right arm
   // M.setIdentity();
-  // M.translate(-0.5, -0.5, 0)
-  // M.scale(0.5, 0.5, 0.5)
-  // drawCube(M, color)
+  // M.translate(-0.06, -0.19, -0.1);
+  // M.rotate(40, -1, 1, 0);
+  // M.rotate(-5, 0, -1, 1);
+  // M.scale(0.08, 0.31, 0.08);
+  // drawCube(M, color);
 
-  // var body = new Cube();
-  // body.color = [1.0, 0.0, 0.0, 1.0];
-  // body.matrix.translate(-0.25, -0.75, 0.0);
-  // body.matrix.rotate(-5, 1, 0, 0);
-  // body.matrix.scale(0.5, 0.3, 0.5);
-  // body.render();
+  // // neck
+  // M.setIdentity();
+  // M.translate(0.045, 0.1, -0.185);
+  // M.rotate(20, -1, 1, 0);
+  // M.scale(0.2, 0.2, 0.2);
+  // drawCube(M, color);
 
-  // // Draw a left arm
-  // var yellow = new Cube();
-  // yellow.color = [1, 1, 0, 1];
-  // yellow.matrix.setTranslate(0, -0.5, 0.0);
-  // yellow.matrix.rotate(-5, 1, 0, 0);
-  // yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
-  // var yellowCoordinatesMat = new Matrix4(yellow.matrix);
-  // yellow.matrix.scale(0.25, 0.7, 0.5);
-  // yellow.matrix.translate(-0.5, 0, -0.001);
-  // yellow.render();
+  // // head
+  // M.setIdentity();
+  // M.translate(-0.03, 0.18, -0.1);
+  // M.rotate(15, 0, 1, 0);
+  // M.rotate(-5, 1, 0, 0);
+  // M.scale(0.4, 0.24, 0.4);
+  // drawCube(M, color);
 
-  // // Test box
-  // var magenta = new Cube();
-  // magenta.color = [1, 0, 1, 1];
-  // magenta.matrix = yellowCoordinatesMat;
-  // magenta.matrix.translate(0, 0.65, 0);
-  // magenta.matrix.rotate(g_magentaAngle, 1, 0, 0);
-  // magenta.matrix.scale(0.3, 0.3, 0.3);
-  // magenta.matrix.translate(-0.5, 0, 0, 0);
-  // magenta.render();
+  // // nose
+  // M.setIdentity();
+  // M.translate(-0.015, 0.18, -0.43);
+  // M.rotate(15, 0, 1, 0);
+  // M.rotate(-5, 1, 0, 0);
+  // M.scale(0.18, 0.075, 0.15);
+  // drawCube(M, color);
+
+  // // left eye
+  // color = [0.1, 0.1, 0.1, 1];
+  // M.setIdentity();
+  // M.translate(0.14, 0.23, -0.54);
+  // M.rotate(15, 0, 1, 0);
+  // M.rotate(-5, 1, 0, 0);
+  // M.scale(0.07, 0.07, 0.05);
+  // drawCube(M, color);
+
+  // // right eye
+  // M.setIdentity();
+  // M.translate(-0.09, 0.23, -0.49);
+  // M.rotate(15, 0, 1, 0);
+  // M.rotate(-5, 1, 0, 0);
+  // M.scale(0.07, 0.07, 0.05);
+  // drawCube(M, color);
+
+  // // right leg
+  // color = [1, 1, 1, 1];
+  // M.setIdentity();
+  // M.translate(0.01, -0.35, 0.02);
+  // M.rotate(15, 0, 1, 0);
+  // M.rotate(-45, 1, 0, 0);
+  // M.scale(0.1, 0.2, 0.1);
+  // drawCube(M, color);
+
+  // // right foot
+  // M.setIdentity();
+  // M.translate(0.01, -0.35, 0.02);
+  // M.rotate(15, 0, 1, 0);
+  // M.rotate(-45, 1, 0, 0);
+  // M.scale(0.1, 0.08, 0.2);
+  // drawCube(M, color);
+
+  // // left leg
+  // M.setIdentity();
+  // M.translate(0.24, -0.35, -0.06);
+  // M.rotate(15, 0, 1, 0);
+  // M.rotate(-45, 1, 0, 0);
+  // M.scale(0.1, 0.2, 0.1);
+  // drawCube(M, color);
+
+  // // left foot
+  // M.setIdentity();
+  // M.translate(0.24, -0.35, -0.06);
+  // M.rotate(15, 0, 1, 0);
+  // M.rotate(-45, 1, 0, 0);
+  // M.scale(0.1, 0.08, 0.2);
+  // drawCube(M, color);
+
+  // // hat
+  // let cone = new Cone();
+  // cone.color = [0.95, 0.95, 0.95, 1.0];
+  // cone.height = 0.42;
+  // cone.radius = 0.41;
+  // cone.matrix.translate(0.1, 0.36, -0.35);
+  // cone.matrix.rotate(8, 1, 0, 0);
+  // cone.render();
 
   // Check the time at the end of the function, and display on web page
   var duration = performance.now() - startTime;
