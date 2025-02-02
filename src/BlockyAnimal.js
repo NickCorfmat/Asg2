@@ -230,7 +230,7 @@ function renderScene() {
 
   // hips
   const M = new Matrix4();
-  M.setTranslate(0, -0.3, 0);
+  M.setTranslate(0, -0.22, 0);
   M.rotate(20, -1, 1, 0);
   M.scale(0.35, 0.15, 0.35);
   drawCube(M, color);
@@ -238,7 +238,7 @@ function renderScene() {
   // torso
   color = animalSkinColor;
   M.setIdentity();
-  M.translate(0.02, -0.2, -0.055);
+  M.translate(0.02, -0.2, -0.045);
   M.rotate(20, -1, 1, 0);
   M.scale(0.3, 0.35, 0.3);
   drawCube(M, color);
@@ -267,20 +267,53 @@ function renderScene() {
   drawCube(M, color);
 
   // left eye
-  color = [0.1, 0.1, 0.1, 1]
+  color = [0.1, 0.1, 0.1, 1];
   M.setIdentity();
   M.translate(0.14, 0.23, -0.54);
   M.rotate(15, 0, 1, 0);
   M.rotate(-5, 1, 0, 0);
   M.scale(0.07, 0.07, 0.05);
   drawCube(M, color);
-  
+
   // right eye
   M.setIdentity();
   M.translate(-0.09, 0.23, -0.49);
   M.rotate(15, 0, 1, 0);
   M.rotate(-5, 1, 0, 0);
   M.scale(0.07, 0.07, 0.05);
+  drawCube(M, color);
+
+  // right leg
+  color = [1, 1, 1, 1];
+  M.setIdentity();
+  M.translate(0.01, -0.35, 0.02);
+  M.rotate(15, 0, 1, 0);
+  M.rotate(-45, 1, 0, 0);
+  M.scale(0.1, 0.2, 0.1);
+  drawCube(M, color);
+
+  // right foot
+  M.setIdentity();
+  M.translate(0.01, -0.35, 0.02);
+  M.rotate(15, 0, 1, 0);
+  M.rotate(-45, 1, 0, 0);
+  M.scale(0.1, 0.08, 0.2);
+  drawCube(M, color);
+
+  // left leg
+  M.setIdentity();
+  M.translate(0.24, -0.35, -0.06);
+  M.rotate(15, 0, 1, 0);
+  M.rotate(-45, 1, 0, 0);
+  M.scale(0.1, 0.2, 0.1);
+  drawCube(M, color);
+
+  // left foot
+  M.setIdentity();
+  M.translate(0.24, -0.35, -0.06);
+  M.rotate(15, 0, 1, 0);
+  M.rotate(-45, 1, 0, 0);
+  M.scale(0.1, 0.08, 0.2);
   drawCube(M, color);
 
   // tree log
