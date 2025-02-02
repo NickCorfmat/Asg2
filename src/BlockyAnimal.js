@@ -264,6 +264,7 @@ function renderScene() {
   M = neckCoords;
   M.scale(2.4, 0.85, 2.4);
   M.translate(-0.3, 0.8, 0.3);
+  let headCoords = M;
   drawCube(M, color);
 
   // nose
@@ -286,10 +287,13 @@ function renderScene() {
 
   // hat
   let cone = new Cone();
+  headCoords.rotate(5, 1, 0, 0);
+  headCoords.scale(1, 1, 2);
+  headCoords.translate(-1.35, 2, 3.6);
+  cone.matrix = headCoords;
   cone.color = [0.95, 0.95, 0.95, 1.0];
-  cone.matrix = M;
-  cone.height = 6;
-  cone.radius = 6;
+  cone.height = 5.5;
+  cone.radius = 6.5;
   cone.render();
 
   // // left arm
