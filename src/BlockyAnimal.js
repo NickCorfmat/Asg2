@@ -33,9 +33,11 @@ let g_selectedSize = 5;
 let g_selectedSegments = 10;
 let g_selectedType = POINT;
 let g_globalAngle = 0;
+let animation = false;
 
 let g_torsoAngle = 0;
 let g_headAngle = 0;
+let g_rightLegAngle = 0;
 
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -102,6 +104,18 @@ function connectVariablesToGLSL() {
 
 // Set up actions for the HTML UI elements
 function addActionsForHtmlUI() {
+  document
+    .getElementById("animationOnButton")
+    .addEventListener("mousedown", function () {
+      animation = true;
+    });
+
+  document
+    .getElementById("animationOffButton")
+    .addEventListener("mousedown", function () {
+      animation = false;
+    });
+
   document
     .getElementById("torsoSlider")
     .addEventListener("mousemove", function () {
@@ -181,7 +195,12 @@ function tick() {
 }
 
 // Update the angles of everything if currently animated
-function updateAnimationAngles() {}
+function updateAnimationAngles() {
+  if (animation) {
+    g_torsoAngle = 9 * Math.sin(g_seconds * 2) + 4;
+    g_headAngle = 10 * Math.sin(g_seconds * 2);
+  }
+}
 
 function handleClicks(ev) {
   // Extract the event click and return it in WebGL coordinates
@@ -225,11 +244,13 @@ function renderScene() {
   var globalRotMat = new Matrix4().rotate(g_globalAngle, 0, 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
+  gl.clearColor(0.384, 0.6, 0.192, 1.0);
+
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   let M = new Matrix4();
-  let color = [0.9, 0.9, 0.9, 1.0];
+  let color = [1.0, 1.0, 1.0, 1.0];
   let animalSkinColor = [0.427, 0.765, 0.91, 1];
 
   // let c = new Cube();
@@ -238,8 +259,8 @@ function renderScene() {
 
   // hips
   M.setTranslate(-0.15, -0.27, 0.15);
-  M.rotate(20, -1, 1, 0);
-  M.scale(0.35, 0.15, 0.35);
+  M.rotate(10, -1, 1, 0);
+  M.scale(0.3, 0.15, 0.3);
   let hipCoords = new Matrix4(M);
   drawCube(M, color);
 
@@ -262,8 +283,8 @@ function renderScene() {
 
   // head
   M = neckCoords;
-  M.scale(2.4, 0.85, 2.4);
-  M.translate(-0.3, 0.8, 0.3);
+  M.scale(2.9, 0.9, 2.9);
+  M.translate(-0.32, 0.8, 0.25);
   let headCoords = M;
   drawCube(M, color);
 
@@ -296,38 +317,29 @@ function renderScene() {
   cone.radius = 6.5;
   cone.render();
 
-  // // left arm
-  // M.setIdentity();
-  // M.translate(0.31, -0.19, -0.19);
-  // M.rotate(40, -1, 1, 0);
-  // M.rotate(5, 0, -1, 1);
-  // M.scale(0.08, 0.31, 0.08);
-  // drawCube(M, color);
+  // left arm
+  color = animalSkinColor;
+  M = torsoCoords;
+  M.translate(1.5, -0.5, 0);
+  M.scale(0.5, 1, 0.5);
+  drawCube(M, color);
 
-  // // right arm
-  // M.setIdentity();
-  // M.translate(-0.06, -0.19, -0.1);
-  // M.rotate(40, -1, 1, 0);
-  // M.rotate(-5, 0, -1, 1);
-  // M.scale(0.08, 0.31, 0.08);
-  // drawCube(M, color);
+  // left arm
+  M.translate(-5, 0, 0);
+  drawCube(M, color);
 
-  // // right leg
-  // color = [1, 1, 1, 1];
-  // M.setIdentity();
-  // M.translate(0.01, -0.35, 0.02);
-  // M.rotate(15, 0, 1, 0);
-  // M.rotate(-45, 1, 0, 0);
-  // M.scale(0.1, 0.2, 0.1);
-  // drawCube(M, color);
+  // right leg
+  color = [1, 1, 1, 1];
+  M.setIdentity();
+  M.rotate(g_rightLegAngle, 1, 0, 0);
+  M.scale(0.1, 0.21, 0.1);
+  M.translate(-1.6, -2.2, 0.3);
+  drawCube(M, color);
 
-  // // right foot
-  // M.setIdentity();
-  // M.translate(0.01, -0.35, 0.02);
-  // M.rotate(15, 0, 1, 0);
-  // M.rotate(-45, 1, 0, 0);
-  // M.scale(0.1, 0.08, 0.2);
-  // drawCube(M, color);
+  // right foot
+  M.scale(1, 0.25, 0.9);
+  M.translate(0, 0, -1);
+  drawCube(M, color);
 
   // // left leg
   // M.setIdentity();
