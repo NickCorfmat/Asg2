@@ -243,6 +243,13 @@ function renderScene() {
   M.scale(0.9, 2, 0.9);
   M.rotate(g_torsoAngle, -1, 0, 0)
   M.translate(0.05, 0.3, -0.05);
+  let torsoCoords = new Matrix4(M);
+  drawCube(M, color);
+
+  // neck
+  M = torsoCoords;
+  M.translate(0.25, 0.4, -0.25);
+  M.scale(0.5, 1, 0.5);
   drawCube(M, color);
 
   // // left arm
@@ -259,13 +266,6 @@ function renderScene() {
   // M.rotate(40, -1, 1, 0);
   // M.rotate(-5, 0, -1, 1);
   // M.scale(0.08, 0.31, 0.08);
-  // drawCube(M, color);
-
-  // // neck
-  // M.setIdentity();
-  // M.translate(0.045, 0.1, -0.185);
-  // M.rotate(20, -1, 1, 0);
-  // M.scale(0.2, 0.2, 0.2);
   // drawCube(M, color);
 
   // // head
