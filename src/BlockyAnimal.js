@@ -271,7 +271,7 @@ function renderScene() {
   M.translate(-0.03, 0.18, -0.1);
   M.rotate(15, 0, 1, 0);
   M.rotate(-5, 1, 0, 0);
-  M.scale(0.4, 0.25, 0.4);
+  M.scale(0.4, 0.24, 0.4);
   drawCube(M, color);
 
   // nose
@@ -331,6 +331,15 @@ function renderScene() {
   M.rotate(-45, 1, 0, 0);
   M.scale(0.1, 0.08, 0.2);
   drawCube(M, color);
+
+  // hat
+  let cone = new Cone();
+  cone.color = [0.95, 0.95, 0.95, 1.0]
+  cone.height = 0.42;
+  cone.radius = 0.41;
+  cone.matrix.translate(0.1, 0.36, -0.35)
+  cone.matrix.rotate(8, 1, 0, 0)
+  cone.render();
 
   // tree log
   // color = [0.561, 0.392, 0.353, 1];

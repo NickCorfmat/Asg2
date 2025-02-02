@@ -105,6 +105,5 @@ function drawCube(matrix, color) {
     color[3]
   );
 
-  // Draw the top face
   gl.drawArrays(gl.TRIANGLES, 30, 6);
 }
