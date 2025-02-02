@@ -243,6 +243,22 @@ function renderScene() {
   M.scale(0.3, 0.35, 0.3);
   drawCube(M, color);
 
+  // left arm
+  M.setIdentity();
+  M.translate(0.31, -0.19, -0.19);
+  M.rotate(40, -1, 1, 0);
+  M.rotate(5, 0, -1, 1);
+  M.scale(0.08, 0.31, 0.08);
+  drawCube(M, color);
+
+  // right arm
+  M.setIdentity();
+  M.translate(-0.06, -0.19, -0.1);
+  M.rotate(40, -1, 1, 0);
+  M.rotate(-5, 0, -1, 1);
+  M.scale(0.08, 0.31, 0.08);
+  drawCube(M, color);
+
   // neck
   M.setIdentity();
   M.translate(0.045, 0.1, -0.185);
