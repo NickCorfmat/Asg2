@@ -120,13 +120,13 @@ function addActionsForHtmlUI() {
     .getElementById("magentaSlider")
     .addEventListener("mousemove", function () {
       g_magentaAngle = this.value;
-      renderAllShapes();
+      renderScene();
     });
   document
     .getElementById("yellowSlider")
     .addEventListener("mousemove", function () {
       g_yellowAngle = this.value;
-      renderAllShapes();
+      renderScene();
     });
 
   // Angle slider
@@ -134,7 +134,7 @@ function addActionsForHtmlUI() {
     .getElementById("angleSlider")
     .addEventListener("mousemove", function () {
       g_globalAngle = this.value;
-      renderAllShapes();
+      renderScene();
     });
 }
 
@@ -165,7 +165,7 @@ function main() {
 function tick() {
   g_seconds = performance.now() / 1000.0 - g_startTime;
   updateAnimationAngles();
-  renderAllShapes();
+  renderScene();
   requestAnimationFrame(tick);
 }
 
@@ -177,7 +177,6 @@ function updateAnimationAngles() {
   if (g_magentaAnimation) {
     g_magentaAngle = 45 * Math.sin(3 * g_seconds);
   }
-  console.log(g_yellowAngle)
 }
 
 function handleClicks(ev) {
@@ -200,7 +199,7 @@ function handleClicks(ev) {
   point.size = g_selectedSize;
 
   // Draw every shape that is supposed to be in the canvas
-  renderAllShapes();
+  renderScene();
 }
 
 function convertCoordinatesEventToGL(ev) {
@@ -214,7 +213,7 @@ function convertCoordinatesEventToGL(ev) {
   return [x, y];
 }
 
-function renderAllShapes() {
+function renderScene() {
   // Check the time at the start of this function
   var startTime = performance.now();
 
@@ -227,33 +226,38 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   // Draw a cube
-  var body = new Cube();
-  body.color = [1.0, 0.0, 0.0, 1.0];
-  body.matrix.translate(-0.25, -0.75, 0.0);
-  body.matrix.rotate(-5, 1, 0, 0);
-  body.matrix.scale(0.5, 0.3, 0.5);
-  body.render();
+  const M = new Matrix4();
+  M.translate(-0.5, -0.5, 0);
 
-  // Draw a left arm
-  var yellow = new Cube();
-  yellow.color = [1, 1, 0, 1];
-  yellow.matrix.setTranslate(0, -0.5, 0.0);
-  yellow.matrix.rotate(-5, 1, 0, 0);
-  yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
-  var yellowCoordinatesMat = new Matrix4(yellow.matrix);
-  yellow.matrix.scale(0.25, 0.7, 0.5);
-  yellow.matrix.translate(-0.5, 0, -0.001);
-  yellow.render();
+  drawCube(M);
 
-  // Test box
-  var magenta = new Cube();
-  magenta.color = [1, 0, 1, 1];
-  magenta.matrix = yellowCoordinatesMat;
-  magenta.matrix.translate(0, 0.65, 0);
-  magenta.matrix.rotate(g_magentaAngle, 1, 0, 0);
-  magenta.matrix.scale(0.3, 0.3, 0.3);
-  magenta.matrix.translate(-0.5, 0, 0, 0);
-  magenta.render();
+  // var body = new Cube();
+  // body.color = [1.0, 0.0, 0.0, 1.0];
+  // body.matrix.translate(-0.25, -0.75, 0.0);
+  // body.matrix.rotate(-5, 1, 0, 0);
+  // body.matrix.scale(0.5, 0.3, 0.5);
+  // body.render();
+
+  // // Draw a left arm
+  // var yellow = new Cube();
+  // yellow.color = [1, 1, 0, 1];
+  // yellow.matrix.setTranslate(0, -0.5, 0.0);
+  // yellow.matrix.rotate(-5, 1, 0, 0);
+  // yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
+  // var yellowCoordinatesMat = new Matrix4(yellow.matrix);
+  // yellow.matrix.scale(0.25, 0.7, 0.5);
+  // yellow.matrix.translate(-0.5, 0, -0.001);
+  // yellow.render();
+
+  // // Test box
+  // var magenta = new Cube();
+  // magenta.color = [1, 0, 1, 1];
+  // magenta.matrix = yellowCoordinatesMat;
+  // magenta.matrix.translate(0, 0.65, 0);
+  // magenta.matrix.rotate(g_magentaAngle, 1, 0, 0);
+  // magenta.matrix.scale(0.3, 0.3, 0.3);
+  // magenta.matrix.translate(-0.5, 0, 0, 0);
+  // magenta.render();
 
   // Check the time at the end of the function, and display on web page
   var duration = performance.now() - startTime;
