@@ -228,28 +228,71 @@ function renderScene() {
   let color = [0.9, 0.9, 0.9, 1.0];
   let animalSkinColor = [0.427, 0.765, 0.91, 1];
 
+  // hips
   const M = new Matrix4();
   M.setTranslate(0, -0.3, 0);
   M.rotate(20, -1, 1, 0);
-  M.scale(0.35, 0.15, 0.35)
+  M.scale(0.35, 0.15, 0.35);
   drawCube(M, color);
 
+  // torso
   color = animalSkinColor;
   M.setIdentity();
-  M.translate(0.02, -0.2, -0.055)
+  M.translate(0.02, -0.2, -0.055);
   M.rotate(20, -1, 1, 0);
-  M.scale(0.3, 0.35, 0.3)
+  M.scale(0.3, 0.35, 0.3);
   drawCube(M, color);
 
-  color = animalSkinColor;
+  // neck
   M.setIdentity();
-  M.translate(0.045, 0.1, -0.185)
+  M.translate(0.045, 0.1, -0.185);
   M.rotate(20, -1, 1, 0);
-  M.scale(0.2, 0.1, 0.2)
+  M.scale(0.2, 0.2, 0.2);
   drawCube(M, color);
 
+  // head
+  M.setIdentity();
+  M.translate(-0.03, 0.18, -0.1);
+  M.rotate(15, 0, 1, 0);
+  M.rotate(-5, 1, 0, 0);
+  M.scale(0.4, 0.25, 0.4);
+  drawCube(M, color);
 
-  // color = 
+  // nose
+  M.setIdentity();
+  M.translate(-0.015, 0.18, -0.43);
+  M.rotate(15, 0, 1, 0);
+  M.rotate(-5, 1, 0, 0);
+  M.scale(0.18, 0.075, 0.15);
+  drawCube(M, color);
+
+  // left eye
+  color = [0.1, 0.1, 0.1, 1]
+  M.setIdentity();
+  M.translate(0.14, 0.23, -0.54);
+  M.rotate(15, 0, 1, 0);
+  M.rotate(-5, 1, 0, 0);
+  M.scale(0.07, 0.07, 0.05);
+  drawCube(M, color);
+  
+  // right eye
+  M.setIdentity();
+  M.translate(-0.09, 0.23, -0.49);
+  M.rotate(15, 0, 1, 0);
+  M.rotate(-5, 1, 0, 0);
+  M.scale(0.07, 0.07, 0.05);
+  drawCube(M, color);
+
+  // tree log
+  // color = [0.561, 0.392, 0.353, 1];
+  // M.setIdentity();
+  // M.translate(-0.5, -0.7, -0.5);
+  // M.rotate(-10, 1, 0, 0);
+  // M.rotate(30, 0, 1, 0);
+  // M.scale(1, 0.3, 2);
+  // drawCube(M, color);
+
+  // color =
   // M.setIdentity();
   // M.translate(-0.5, -0.5, 0)
   // M.scale(0.5, 0.5, 0.5)
