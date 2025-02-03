@@ -38,6 +38,7 @@ let animation = false;
 let g_torsoAngle = 0;
 let g_stickAngle = 300;
 let g_headAngle = -5;
+let g_hatAngle = 0;
 let g_rightLegAngle = 0;
 let g_leftLegAngle = 0;
 let g_leftArmAngle = 0;
@@ -137,6 +138,13 @@ function addActionsForHtmlUI() {
     .getElementById("stickSlider")
     .addEventListener("mousemove", function () {
       g_stickAngle = this.value;
+      renderScene();
+    });
+
+  document
+    .getElementById("hatSlider")
+    .addEventListener("mousemove", function () {
+      g_hatAngle = this.value;
       renderScene();
     });
 
@@ -335,7 +343,7 @@ function renderScene() {
 
   // hat
   let cone = new Cone();
-  headCoords.rotate(5, 1, 0, 0);
+  headCoords.rotate(-g_hatAngle, 1, 0, 0);
   headCoords.scale(1, 1, 2);
   headCoords.translate(-1.35, 2, 3.6);
   cone.matrix = headCoords;
@@ -348,10 +356,10 @@ function renderScene() {
 
   // left arm
   color = animalSkinColor;
-  M.matrix = leftArmCoords;
-  M.translate(2.1, -5, 1);
+  M = leftArmCoords;
+  M.translate(1.5, 0.5, -0.3);
   M.rotate(g_leftArmAngle, 1, 0, 0);
-  M.scale(1.3, -5.5, 1.3);
+  M.scale(0.5, -1, 0.5);
   drawCube(M, color);
 
   // right arm
