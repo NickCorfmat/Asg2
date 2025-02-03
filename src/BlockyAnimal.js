@@ -217,8 +217,8 @@ function updateAnimationAngles() {
   if (animation) {
     g_torsoAngle = 9 * Math.sin(g_seconds * 2) + 4;
     g_headAngle = 10 * Math.sin(g_seconds * 2);
-    g_rightLegAngle = 10 * Math.sin(g_seconds * 2);
-    g_leftLegAngle = -15 * Math.sin(g_seconds * 2) - 5;
+    g_rightLegAngle = 20 * Math.sin(g_seconds * 2);
+    g_leftLegAngle = -25 * Math.sin(g_seconds * 2) - 5;
     g_leftArmAngle = 30 * Math.sin(g_seconds * 2);
   }
 }
@@ -265,7 +265,7 @@ function renderScene() {
   var globalRotMat = new Matrix4().rotate(g_globalAngle, 0, 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
-  gl.clearColor(0.384, 0.6, 0.192, 1.0);
+  gl.clearColor(0.384, 0.7, 0.292, 1.0);
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);

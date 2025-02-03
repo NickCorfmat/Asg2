@@ -20,6 +20,14 @@ h1 {
     color: #bbffb5;
 }
 
+h2 {
+    margin: 0 0 10px 0;
+}
+
+p {
+    margin: 0 0 20px 0;
+}
+
 p {
     font-weight: 500;
     font-size: 1.5em;
@@ -27,6 +35,18 @@ p {
 
 #webgl {
     border-radius: 10px;
+}
+
+#app {
+    display: flex;
+    flex-direction: row;
+}
+
+#controlContainer {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #animationButtons {
@@ -49,3 +69,33 @@ button:hover {
     transform: scale(1.05);
     transition: 0.1s ease;
 }
+
+/* Slider CSS modified from ChatGPT */
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 200px;
+    height: 10px;
+    border-radius: 8px;
+    background-color: #bbffb5;
+    border: 2px solid black;
+    margin: 8px 0;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgb(111, 190, 255);
+    border: 2px solid black;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    transition: 0.1s ease;
+}
+
+/* End slider CSS */

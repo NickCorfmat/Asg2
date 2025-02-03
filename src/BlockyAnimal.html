@@ -17,25 +17,31 @@ None
   <body onload="main()">
     <h1>Super Epic Smurf Cat</h1>
 
-    <canvas id="webgl" width="400" height="400">
-      Please use a browser that supports "canvas"
-    </canvas>
-    
-    <p id="numdot"> XXX </p>
+    <div id="app">
+      <div id="canvasContainer">
+        <canvas id="webgl" width="400" height="400">
+          Please use a browser that supports "canvas"
+        </canvas>
+      </div>
+      <div id="controlContainer">
+        <h2>Diagnostics:</h2>
+        <p id="numdot"> XXX </p>
 
-    <h2>Animation:</h2>
-    <div id="animationButtons">
-      <button type="button" id="animationOnButton">ON</button>
-      <button type="button" id="animationOffButton">OFF</button>
+        <h2>Animation:</h2>
+        <div id="animationButtons">
+          <button type="button" id="animationOnButton">ON</button>
+          <button type="button" id="animationOffButton">OFF</button>
+        </div>
+    
+        <br>
+
+        Camera Angle <input type="range" min="0" max="360" value="0" class="slider" id="angleSlider">
+        Torso (1st-level joint) <input type="range" min="-5" max="13" value="0" class="slider" id="torsoSlider">
+        Head (2nd-level joint) <input type="range" min="-15" max="15" value="0" class="slider" id="headSlider">
+        Hat (3rd-level joint) <input type="range" min="-3" max="3" value="0" class="slider" id="hatSlider">
+        Stick <input type="range" min="280" max="320" value="45" class="slider" id="stickSlider">
+      </div>
     </div>
-    
-    <br>
-
-    Camera Angle <input type="range" min="0" max="360" value="0" class="slider" id="angleSlider">
-    Torso (1st-level joint) <input type="range" min="-5" max="13" value="0" class="slider" id="torsoSlider">
-    Head (2nd-level joint) <input type="range" min="-15" max="15" value="0" class="slider" id="headSlider">
-    Hat (3rd-level joint) <input type="range" min="-3" max="3" value="0" class="slider" id="hatSlider">
-    Stick <input type="range" min="280" max="320" value="45" class="slider" id="stickSlider">
 
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
