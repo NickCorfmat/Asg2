@@ -34,6 +34,7 @@ let g_selectedSegments = 10;
 let g_selectedType = POINT;
 let g_globalAngle = 0;
 let animation = false;
+let awoogaAnimation = false;
 
 let g_torsoAngle = 0;
 let g_stickAngle = 300;
@@ -42,6 +43,7 @@ let g_hatAngle = 0;
 let g_rightLegAngle = 0;
 let g_leftLegAngle = 0;
 let g_leftArmAngle = 0;
+let g_eyeHeight = 0.5;
 
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -165,6 +167,10 @@ function addActionsForHtmlUI() {
       isDragging = true;
       lastX = ev.clientX;
     }
+
+    if (ev.shiftKey && ev.button === 0) {
+      awoogaAnimation = true;
+    }
   });
 
   document.addEventListener("mousemove", (ev) => {
@@ -220,6 +226,13 @@ function updateAnimationAngles() {
     g_rightLegAngle = 20 * Math.sin(g_seconds * 2);
     g_leftLegAngle = -25 * Math.sin(g_seconds * 2) - 5;
     g_leftArmAngle = 30 * Math.sin(g_seconds * 2);
+  }
+
+  if (awoogaAnimation && g_eyeHeight < 4) {
+    g_eyeHeight += 0.02;
+  } else {
+    awoogaAnimation = false;
+    g_eyeHeight = 0.5;
   }
 }
 
@@ -333,7 +346,7 @@ function renderScene() {
   color = [0.1, 0.1, 0.1, 1];
   M = neckCoords;
   M.translate(-0.35, 0.9, 0.1);
-  M.scale(0.35, 0.5, 0.5);
+  M.scale(0.35, g_eyeHeight, 0.5);
   drawCube(M, color);
 
   // left eye

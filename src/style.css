@@ -17,7 +17,7 @@ body {
 
 h1 {
     font-size: 2.4em;
-    color: #bbffb5;
+    color: #ffffff;
 }
 
 h2 {
@@ -80,6 +80,7 @@ input[type="range"] {
     border: 2px solid black;
     margin: 8px 0;
     outline: none;
+    margin-top: 10px;
 }
 
 input[type="range"]::-webkit-slider-thumb {
