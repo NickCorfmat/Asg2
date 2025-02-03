@@ -285,13 +285,21 @@ function renderScene() {
 
   let M = new Matrix4();
   let color = [1.0, 1.0, 1.0, 1.0];
-  let animalSkinColor = [0.427, 0.61, 0.91, 1];
+  let animalSkinColor = [0.475, 0.678, 0.87, 1];
 
   // hips
   M.setTranslate(-0.15, -0.2, 0.15);
   M.rotate(10, -1, 1, 0);
   M.scale(0.3, 0.15, 0.3);
   let hipCoords = new Matrix4(M);
+  drawCube(M, color);
+
+  // tail
+  color = [0.464, 0.65, 0.85, 1];
+  M.setIdentity();
+  M.setTranslate(-0.05, -0.155, 0.1);
+  M.rotate(70, 1, 0, 0);
+  M.scale(0.08, 0.1, 0.08);
   drawCube(M, color);
 
   // torso
@@ -336,7 +344,7 @@ function renderScene() {
   drawCube(M, color);
 
   // nose
-  color = [0.427, 0.6, 0.91, 1];
+  color = [0.464, 0.65, 0.85, 1];
   M = neckCoords;
   M.translate(0.275, 0.1, -1);
   M.scale(0.45, 0.4, 0.15);
