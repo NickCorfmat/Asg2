@@ -36,6 +36,7 @@ let g_globalAngle = 0;
 let animation = false;
 
 let g_torsoAngle = 0;
+let g_stickAngle = 300;
 let g_headAngle = -5;
 let g_rightLegAngle = 0;
 let g_leftLegAngle = 0;
@@ -132,6 +133,13 @@ function addActionsForHtmlUI() {
       renderScene();
     });
 
+  document
+    .getElementById("stickSlider")
+    .addEventListener("mousemove", function () {
+      g_stickAngle = this.value;
+      renderScene();
+    });
+
   // Angle slider
   document
     .getElementById("angleSlider")
@@ -203,7 +211,7 @@ function updateAnimationAngles() {
     g_headAngle = 10 * Math.sin(g_seconds * 2);
     g_rightLegAngle = 10 * Math.sin(g_seconds * 2);
     g_leftLegAngle = -15 * Math.sin(g_seconds * 2) - 5;
-    g_leftArmAngle = 20 * Math.sin(g_seconds * 2) + 10;
+    g_leftArmAngle = 30 * Math.sin(g_seconds * 2);
   }
 }
 
@@ -259,7 +267,7 @@ function renderScene() {
   let animalSkinColor = [0.427, 0.61, 0.91, 1];
 
   // hips
-  M.setTranslate(-0.15, -0.27, 0.15);
+  M.setTranslate(-0.15, -0.2, 0.15);
   M.rotate(10, -1, 1, 0);
   M.scale(0.3, 0.15, 0.3);
   let hipCoords = new Matrix4(M);
@@ -274,7 +282,24 @@ function renderScene() {
   let torsoCoords = new Matrix4(M);
   drawCube(M, color);
 
+  // stick
+  color = [0.58, 0.345, 0.188, 1];
+  M = hipCoords;
+  M.translate(0, 0, 0);
+  M.rotate(-g_stickAngle, 1, 0, 0);
+  M.scale(0.2, 2, 0.2);
+  let stickCoords = new Matrix4(M);
+  drawCube(M, color);
+
+  // snail
+  color = [0.78, 0.714, 0.553, 1.0];
+  M = stickCoords;
+  M.translate(-0.5, 0.6, 2.2);
+  M.scale(2, 0.3, 3);
+  drawCube(M, color);
+
   // neck
+  color = animalSkinColor;
   M = torsoCoords;
   M.translate(0.25, 0.4, -0.25);
   M.rotate(-g_headAngle, 1, 0, 0);
@@ -288,8 +313,6 @@ function renderScene() {
   M.translate(-0.32, 0.8, 0.25);
   let headCoords = M;
   drawCube(M, color);
-
-  // left ear
 
   // nose
   color = [0.427, 0.6, 0.91, 1];
@@ -333,10 +356,9 @@ function renderScene() {
 
   // right arm
   M = torsoCoords;
-  M.translate(-1.05, 0.5, -0.2);
+  M.translate(-1.04, 0.45, -0.2);
   M.rotate(-g_leftArmAngle, 1, 0, 0);
-  M.scale(0.5, -1, 0.5);
-  let rightArmCoords = new Matrix4(M);
+  M.scale(0.6, -1, 0.5);
   drawCube(M, color);
 
   // right leg
@@ -344,7 +366,7 @@ function renderScene() {
   M.setIdentity();
   M.rotate(g_rightLegAngle, 1, 0, 0);
   M.scale(0.1, 0.21, 0.1);
-  M.translate(-1.6, -2.2, 0.3);
+  M.translate(-1.6, -2, 0.3);
   drawCube(M, color);
 
   // right foot
@@ -357,7 +379,7 @@ function renderScene() {
   M.setIdentity();
   M.rotate(g_leftLegAngle, 1, 0, 0);
   M.scale(0.1, 0.21, 0.1);
-  M.translate(0.25, -2.2, 0.3);
+  M.translate(0.25, -2, 0.3);
   drawCube(M, color);
 
   // left foot
@@ -369,7 +391,7 @@ function renderScene() {
   color = [0.58, 0.345, 0.188, 1];
   M.setIdentity();
   M.rotate(-5, 1, 0, 0);
-  M.translate(-0.28, -0.76, 1);
+  M.translate(-0.28, -0.7, 1);
   M.scale(0.5, 0.3, 2);
   drawCube(M, color);
 
